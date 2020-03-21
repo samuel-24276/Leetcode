@@ -82,6 +82,7 @@ public:
 只有当我们向上移动到最上面的行或向下移动到最下面的行时，当前方向才会发生改变。
 
 */
+/*
 class Solution {
 public:
     string convert(string s, int numRows) {
@@ -100,6 +101,45 @@ public:
 
         string res;
         for (string row : rows) res += row;
+        return res;
+    }
+};
+*/
+
+/*
+按行访问
+思路
+按照与逐行读取 Z 字形图案相同的顺序访问字符串。
+
+算法
+首先访问 行 0 中的所有字符，接着访问 行 1，然后 行 2，依此类推...
+对于所有整数 k，行 0 中的字符位于索引 k(2⋅numRows−2) 处;
+行numRows−1 中的字符位于索引 k(2⋅numRows−2)+numRows−1 处;
+内部的 行 i 中的字符位于索引 k(2⋅numRows−2)+i 以及 (k+1)(2⋅numRows−2)−i 处;
+*/
+
+class Solution {
+public:
+    string convert(string s, int numRows) {
+
+        if (numRows == 1) return s;
+
+        string res;
+        int n = s.size();
+        int cycleLen = 2 * numRows - 2;     //一组z循环包含的字符数
+
+        for (int i = 0; i < numRows; ++i) {
+            for (int j = 0; j + i < n; j += cycleLen) {//j为字符的下标,i为其行号
+                res += s[j + i];        //存储满列字符
+                //cout << s[j + i] << " ";
+                if (i != 0 && i != numRows - 1 && j + cycleLen - i < n) {
+                    //若不进行j + cycleLen - i < n判断，在某些情况下会造成数组越界
+                    //cout << " =" << s[j + cycleLen - i] << " ";
+                    res += s[j + cycleLen - i];     //存储非满列字符                    
+                }                    
+            }
+            //cout << endl;
+        }
         return res;
     }
 };
@@ -126,5 +166,10 @@ int main() {
 内存消耗 :
 12.1 MB, 在所有 C++ 提交中击败了62.48%的用户
 
-
+03.21
+按行访问
+执行用时 :
+16 ms, 在所有 C++ 提交中击败了65.58%的用户
+内存消耗 :
+9.4 MB, 在所有 C++ 提交中击败了100.00%的用户
 */
